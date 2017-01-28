@@ -36,7 +36,8 @@ export default {
       type: Function,
       default (item) {
         this.reset()
-        this.value = item
+        this.selection = item
+        this.$emit('input', this.selection)
       }
     },
     placeholder: {type: String},
@@ -49,7 +50,8 @@ export default {
       noResults: true,
       current: 0,
       items: [],
-      val: ''
+      val: '',
+      selection: ''
     }
   },
   computed: {
@@ -58,8 +60,8 @@ export default {
   },
   watch: {
     val (val, old) {
-      this.$emit('input', val)
-      if (val !== old) this._update()
+      // this.$emit('input', val)
+      if (val !== old && val !== this.selection) this.update()
     },
     value (val) {
       if (this.val !== val) { this.val = val }
@@ -82,7 +84,7 @@ export default {
     },
     reset () {
       this.items = []
-      this.val = ''
+      // this.val = ''
       this.loading = false
       this.showDropdown = false
     },
@@ -101,17 +103,8 @@ export default {
     },
     down () {
       if (this.current < this.items.length - 1) this.current++
-    }
-  },
-  created () {
-    this.val = this.value
-    this._tmpl = {
-      template: this.templateHtml || '<strong v-html="item"></strong>',
-      props: {
-        item: {default: null}
-      }
-    }
-    this._update = delayer(function () {
+    },
+    update: delayer(function () {
       if (!this.val) {
         this.reset()
         return false
@@ -124,7 +117,17 @@ export default {
         this.setItems(this.data)
       }
     }, 'delay', DELAY)
-    this._update()
+  },
+  created () {
+    this.val = this.value
+    this._tmpl = {
+      template: this.templateHtml || '<strong v-html="item"></strong>',
+      props: {
+        item: {default: null}
+      }
+    }
+    
+    this.update()
   }
 }
 </script>

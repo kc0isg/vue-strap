@@ -1,10 +1,9 @@
 <template>
-  <doc-section id="typeahead" name="***Typeahead">
+  <doc-section id="typeahead" name="Typeahead">
     <div class="bs-example">
-      Typeahead failing.
-      <!--
       <h4>Static arrays</h4>
-      <typeahead :data="USstate" placeholder="USA states"></typeahead>
+      <typeahead :data="USstate" placeholder="USA states" v-model="selectedValue">
+      </typeahead>
       <hr>
       <h4>
       Asynchronous results
@@ -30,7 +29,6 @@
         :template="githubTemplate"
         :on-hit="githubCallback"
       ></typeahead>
-      -->
     </div>
     <doc-code language="markup">
       &lt;h4>Static arrays&lt;/h4>
@@ -159,7 +157,8 @@ export default {
     return {
       USstate: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
       asyncTemplate: '{{ item.formatted_address }}',
-      githubTemplate: '<img width="18px" height="18px" :src="item.avatar_url"/> <span>{{item.login}}</span>'
+      githubTemplate: '<img width="18px" height="18px" :src="item.avatar_url"/> <span>{{item.login}}</span>',
+      selectedValue: ''
     }
   },
   methods: {
