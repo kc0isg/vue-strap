@@ -37,7 +37,6 @@ export default {
       default (item) {
         this.reset()
         this.selection = item
-        this.$emit('input', this.selection)
       }
     },
     placeholder: {type: String},
@@ -65,6 +64,9 @@ export default {
     },
     value (val) {
       if (this.val !== val) { this.val = val }
+    },
+    selection(val, old) {
+        this.$emit('input', val)
     }
   },
   methods: {
