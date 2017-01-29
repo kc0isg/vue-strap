@@ -59,7 +59,6 @@ export default {
   },
   watch: {
     val (val, old) {
-      // this.$emit('input', val)
       if (val !== old && val !== this.selection) this.update()
     },
     value (val) {
@@ -86,7 +85,6 @@ export default {
     },
     reset () {
       this.items = []
-      // this.val = ''
       this.loading = false
       this.showDropdown = false
     },
