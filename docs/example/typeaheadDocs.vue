@@ -2,7 +2,10 @@
   <doc-section id="typeahead" name="Typeahead">
     <div class="bs-example">
       <h4>Static arrays</h4>
-      <typeahead :data="USstate" placeholder="USA states" v-model="selectedValue">
+      <typeahead 
+        :data="USstate" 
+        placeholder="USA states" 
+        v-model="stateSelection">
       </typeahead>
       <hr>
       <h4>
@@ -17,6 +20,7 @@
         async="https://maps.googleapis.com/maps/api/geocode/json?address="
         :template="asyncTemplate"
         :on-hit="googleCallback"
+        v-model="googleSelection"
       ></typeahead>
       <hr>
       <h4>
@@ -28,31 +32,35 @@
         async="https://api.github.com/search/users?q="
         :template="githubTemplate"
         :on-hit="githubCallback"
+        v-model="githubSelection"
       ></typeahead>
     </div>
     <doc-code language="markup">
       &lt;h4>Static arrays&lt;/h4>
       &lt;typeahead
         :data="USstate"
-        placeholder="USA states">
+        placeholder="USA states"
+        v-model="stateSelection">
       &lt;/typeahead>
 
       &lt;h4>Asynchronous results&lt;/h4>
         &lt;typeahead
           placeholder="Address, async via maps.googleapis.com"
           async-key="results"
-          src="https://maps.googleapis.com/maps/api/geocode/json?address="
+          async="https://maps.googleapis.com/maps/api/geocode/json?address="
           :template="asyncTemplate"
-          :on-hit="googleCallback">
+          :on-hit="googleCallback"
+          v-model="googleSelection">
       &lt;/typeahead>
 
       &lt;h4>Custom templates for results&lt;/h4>
         &lt;typeahead
           placeholder="Github users, async via api.github.com"
           async-key="items"
-          src="https://api.github.com/search/users?q="
+          async="https://api.github.com/search/users?q="
           :template="githubTemplate"
-          :on-hit="githubCallback">
+          :on-hit="githubCallback"
+          v-model="githubSelection">
       &lt;/typeahead>
     </doc-code>
     <doc-code language="javascript">
@@ -64,14 +72,16 @@
           return {
             USstate: ['Alabama', 'Alaska', 'Arizona',...],
             asynchronous: '{{'{{'}}item.formatted_address}}',
-            customTemplate: '&lt;img width="18px" height="18px" :src="avatar_url"/>&lt;span>{{'{{'}}item.login}}&lt;/span>'
+            customTemplate: '&lt;img width="18px" height="18px" :src="avatar_url"/>&lt;span>{{'{{'}}item.login}}&lt;/span>',
+            stateSelection: '',
+            googleSelection: '',
+            githubSelection: ''
           }
         },
         methods: {
           googleCallback(items, targetVM) {
-            const that = targetVM;
-            that.reset()
-            that.value = items.formatted_address
+            targetVm.reset()
+            targetVm.selection = items.formatted_address
           },
           githubCallback(items) {
             window.open(items.html_url, '_blank')
@@ -84,7 +94,13 @@
         <p>value</p>
         <p><code>String</code></p>
         <p><code>''</code></p>
-        <p></p>
+        <p>Initial text value of typeahead</p>
+      </div>
+      <div>
+        <p>selection</p>
+        <p><code>String</code></p>
+        <p><code>''</code></p>
+        <p>Value selected from the results list</p>
       </div>
       <div>
         <p>data</p>
@@ -158,13 +174,15 @@ export default {
       USstate: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
       asyncTemplate: '{{ item.formatted_address }}',
       githubTemplate: '<img width="18px" height="18px" :src="item.avatar_url"/> <span>{{item.login}}</span>',
-      selectedValue: ''
+      stateSelection: '',
+      googleSelection: '',
+      githubSelection: ''
     }
   },
   methods: {
     googleCallback (items, targetVM) {
       targetVM.reset()
-      targetVM.value = items.formatted_address
+      targetVM.selection = items.formatted_address
     },
     githubCallback (items) {
       window.open(items.html_url, '_blank')
